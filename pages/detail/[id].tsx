@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { GoVerified } from 'react-icons/go';
 import { MdOutlineCancel } from 'react-icons/md';
 import { BsFillPlayFill } from 'react-icons/bs';
-// import { HiVolumnUp, HiVolumnOff } from 'react-icons/hi';
+import { HiVolumeUp, HiVolumeOff } from 'react-icons/hi';
 import axios from 'axios';
 import { BASE_URL } from '../../utils';
 import { Video } from '../../types';
@@ -17,6 +17,7 @@ interface IProps {
 const Detail = ({ postDetails }: IProps) => {
 	const [post, setPost] = useState(postDetails);
 	const [playing, setPlaying] = useState(false);
+	const [isVideoMuted, setIsVideoMuted] = useState(false);
 	const videoRef = useRef<HTMLVideoElement>(null);
 
 	const onVideoClick = () => {
@@ -28,6 +29,12 @@ const Detail = ({ postDetails }: IProps) => {
 			setPlaying(true);
 		}
 	};
+
+	useEffect(() => {
+		if (post && videoRef?.current) {
+			videoRef.current.muted = isVideoMuted;
+		}
+	}, [post, isVideoMuted]);
 
 	if (!post) return null;
 
@@ -50,6 +57,18 @@ const Detail = ({ postDetails }: IProps) => {
 							</button>
 						)}
 					</div>
+				</div>
+
+				<div className="absolute bottom-5 lg:bottom-10 right-5 lg:right-10 cursor-pointer">
+					{isVideoMuted ? (
+						<button onClick={() => setIsVideoMuted(false)}>
+							<HiVolumeOff className="text-white text-2xl lg:text-4xl" />
+						</button>
+					) : (
+						<button onClick={() => setIsVideoMuted(true)}>
+							<HiVolumeUp className="text-white text-2xl lg:text-4xl" />
+						</button>
+					)}
 				</div>
 			</div>
 		</div>
